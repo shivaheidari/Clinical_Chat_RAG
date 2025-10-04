@@ -1,27 +1,10 @@
 import faiss 
 import numpy as np
 
-d = 512 
-nb = 100 
-np.random.seed(42)
-embeddings = np.random.random((nb, d)).astype("float32")
+from datasets import load_dataset
+from sentence_transformers import SentenceTransformer
 
-index = faiss.IndexFlat2(d)
-index.add(embeddings)
+pubmedqa = load_dataset("pubmed_qa", "pqa_labeled")
+print(pubmedqa["train"][0])
 
-print("Number of vectors in index:", index.ntotal)
-
-index = faiss.IndexHNSWFlat(d, 32) 
-index.add(embeddings)
-
-
-# create a query vector
-query = np.random.random((1, d)).astype('float32')
-
-# search for top 5 nearest neighbors
-k = 5
-distances, indices = index.search(query, k)
-print("Top 5 distances:", distances)
-print("Top 5 indices:", indices)
-faiss.write_index(index, "faiss_index.idx")
-index = faiss.read_index("faiss_index.idx")
+model = SentenceTransformer("all-MiniLM-L6-v2")
