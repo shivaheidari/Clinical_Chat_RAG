@@ -1,11 +1,12 @@
 import os
 import openai
 from dotenv import find_dotenv, load_dotenv
-from langchain_community.llms import OpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import HumanMessage
 
-load_dotenv(find_dotenv())
-openai.api_key = os.getenv("Key")
+load_dotenv()
+if not os.getenv("GOOGLE_API_KEY"):
+    raise ValueError("GOOGLE_API_KEY not found. Please check your .env file.")
 
-llm_model = "gpt-3.5-turbo"
-llm = OpenAI(openai_api_key = os.getenv("Key"))
+
 
