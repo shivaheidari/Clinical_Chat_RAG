@@ -10,3 +10,12 @@ if not os.getenv("GOOGLE_API_KEY"):
 
 
 
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+messages = [
+    HumanMessage(content="Explain the LangChain Expression Language (LCEL) in one sentence.", temprature=0.7)
+]
+
+print("--- LLM Response ---")
+response = llm.invoke(messages)
+
+print(response.content)
