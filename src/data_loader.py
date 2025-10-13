@@ -2,6 +2,13 @@ import pandas as pd
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from langchain_community.document_loaders import CSVLoader
+import os
+import json 
+
+#----------configuration------------
+out_put_path = "data/clinical_chunks.json"
+chunk_size = 100
+chunk_overlap = 20
 
 loader = CSVLoader(
 
@@ -13,14 +20,16 @@ documents = loader.load()
 
 text_spliter = RecursiveCharacterTextSplitter(
 
-    chunk_size=100, 
-    chunk_overlap=20
+    chunk_size=chunk_size, 
+    chunk_overlap=chunk_overlap
 )
 
 split_documents = text_spliter.split_documents(documents)
 
-print(f"Total original documents: {len(documents)}")
-print(f"Total chunks created: {len(split_documents)}")
-print("\n--- First Chunk (ID 1) ---")
-print(f"Content: {split_documents[0].page_content}")
-print(f"Metadata: {split_documents[0].metadata}") 
+data_to_save = [{"page_content": doc.page_content, "metadata":doc.metadata} 
+                for doc in split_documents]
+
+os.makedirs(os.path.dirname(out_put_path), exist_ok=True)
+
+with open(out_put_path, 'w', encoding='utf-8') as f:
+    json.dump(data_to_save, f, ensure_ascii=False, indent=4)
