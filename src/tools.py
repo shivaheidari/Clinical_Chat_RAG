@@ -2,6 +2,9 @@ from langchain_core.tools import tool
 import json
 import smtplib 
 
+import os
+from email.message import EmailMessage
+
 
 # --- Tool 1: Saving the Summary to a File ---
 @tool
