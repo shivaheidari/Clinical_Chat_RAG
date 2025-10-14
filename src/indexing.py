@@ -2,7 +2,6 @@ import json
 import os
 from langchain_core.documents import Document
 from langchain_google_genai import GoogleGenerativeAIEmbeddings 
-import getpass
 from langchain_community.vectorstores import Chroma
 
 from dotenv import load_dotenv
