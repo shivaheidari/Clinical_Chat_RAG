@@ -1,5 +1,7 @@
 from langchain_core.tools import tool
 import json
+import smtplib 
+
 
 # --- Tool 1: Saving the Summary to a File ---
 @tool
@@ -28,19 +30,51 @@ def save_summary_to_file(summary_text: str, patient_id: int) -> str:
 @tool
 def send_alert_email(recipient: str, subject: str, body: str) -> str:
     """
-    Mocks sending an urgent email alert about a clinical finding to a specified recipient.
-    (In a real application, this would use an SMTP library like smtplib).
-    
+    Sends an urgent email alert about a clinical finding to a specified recipient.
+    Requires SENDER_EMAIL, EMAIL_APP_PASSWORD, SMTP_SERVER, and SMTP_PORT 
+    to be set as environment variables.
+
     Args:
-        recipient: The email address to send the alert to (e.g., doctor@clinic.org).
-        subject: The subject line of the email.
-        body: The main content of the email.
+        recipient: The single email address to send the alert to (e.g., doctor@clinic.org).
+        subject: The subject line of the email (e.g., "URGENT: Patient 1 Critical Update").
+        body: The main content of the email (the clinical summary).
         
     Returns:
-        A confirmation message detailing the mock email sent.
+        A confirmation message detailing the status of the sent email.
     """
-    return (f"MOCK EMAIL SENT: To: {recipient}, Subject: {subject}. "
-            f"Body starts with: {body[:50]}...")
+    # 1. Retrieve credentials from environment
+    sender_email = os.environ.get("SENDER_EMAIL")
+    app_password = os.environ.get("EMAIL_APP_PASSWORD")
+    smtp_server = os.environ.get("SMTP_SERVER")
+    smtp_port = os.environ.get("SMTP_PORT")
+
+    if not all([sender_email, app_password, smtp_server, smtp_port]):
+        return "ERROR: Email credentials (SENDER_EMAIL/PASSWORD/SMTP_SERVER) are not configured."
+
+    # 2. Build the message object
+    msg = EmailMessage()
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = recipient
+    msg.set_content(body)
+
+    # 3. Connect to the SMTP server and send the email
+    try:
+        # Use a context manager for the server connection
+        with smtplib.SMTP(smtp_server, int(smtp_port)) as server:
+            # Encrypt the connection (mandatory for most servers)
+            server.starttls() 
+            # Log in using the App Password
+            server.login(sender_email, app_password)
+            # Send the mail!
+            server.send_message(msg)
+            
+        return f"SUCCESS: Clinical Alert Email sent to {recipient} with subject: '{subject}'"
+        
+    except smtplib.SMTPAuthenticationError:
+        return "ERROR: Failed to log in. Check SENDER_EMAIL and EMAIL_APP_PASSWORD."
+    except Exception as e:
+        return f"ERROR: Could not send email due to a connection error: {e}
 
 # List of all tools available to the Agent
 CLINICAL_TOOLS = [save_summary_to_file, send_alert_email]
