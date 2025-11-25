@@ -3,3 +3,5 @@ key.txt
 .env
 data
 clinical_reports_db
+
+confings/azure_keys.json
