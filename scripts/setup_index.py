@@ -35,11 +35,11 @@ vector_search = VectorSearch(
         name="cl-hnsw",
         parameters=HnswParameters(
             m=4,
-            ef_construction=100,
-            ef_search=40,
+            ef_construction=200,
+            ef_search=100,
             metric="cosine"
         )
-    )] , profiles=[VectorSearchProfile(name="hnsw-profile", algorithm_configuration_name="clinicalhnsw")]
+    )] , profiles=[VectorSearchProfile(name="hnsw-profile", algorithm_configuration_name="cl-hnsw")]
 )
 
 # define fields (shcema)
