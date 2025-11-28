@@ -66,6 +66,11 @@ fileds = [
         filterable=True, 
         facetable=True
     ),
+    SearchableField(  # Makes it searchable for keyword/hybrid search
+        name="chunk_text",
+        type=SearchFieldDataType.String,
+        searchable=True
+    ),
     SearchField(
 
         name="embedding_vector",
