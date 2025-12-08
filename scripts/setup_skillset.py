@@ -70,8 +70,8 @@ skillset = SearchIndexerSkillset(
             context="/document/chunks/*",
             resource_url=AZURE_OPENAI_ENDPOINT,
             api_key=AZURE_OPENAI_KEY,
-            deployment_name="text-embedding-3-small",
-            model_name="text-embedding-3-small",
+            deployment_name="text-embedding-ada-002",
+            model_name="text-embedding-ada-002",
             inputs=[
                 InputFieldMappingEntry(name="text", source="/document/chunks/*")
             ],
