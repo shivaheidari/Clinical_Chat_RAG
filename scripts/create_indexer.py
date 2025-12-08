@@ -26,7 +26,7 @@ indexer = SearchIndexer(
     skillset_name=SKILLSET_NAME,
 
  field_mappings=[],  
-    output_field_mappings=[
+output_field_mappings=[
         # SplitSkill output "chunks" → chunk_text
         {
             "sourceFieldName": "/document/chunks/*",
