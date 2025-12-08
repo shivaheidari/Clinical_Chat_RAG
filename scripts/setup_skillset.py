@@ -13,7 +13,6 @@ from azure.search.documents.indexes.models import(
     SearchIndexerDataContainer,
 )
 
-import os 
 import json
 
 with open("confings/azure_keys.json") as f:
