@@ -41,52 +41,54 @@ vector_search = VectorSearch(
         )
     )] , profiles=[VectorSearchProfile(name="hnsw-profile", algorithm_configuration_name="cl-hnsw")]
 )
-
 # define fields (shcema)
-fileds = [
 
-
+fields = [
     SimpleField(
-        name="chunk_id",
+        name="id",
         type=SearchFieldDataType.String,
         key=True,
-        filterable=True
+        filterable=True,
     ),
     SimpleField(
-        name="patinet_id",
+        name="patient_id",
         type=SearchFieldDataType.String,
         filterable=True,
-        facetable=True
-
+        facetable=True,
     ),
     SimpleField(
-
         name="section",
         type=SearchFieldDataType.String,
-        filterable=True, 
-        facetable=True
+        filterable=True,
+        facetable=True,
     ),
-    SearchableField(  # Makes it searchable for keyword/hybrid search
+    SearchableField(
         name="chunk_text",
         type=SearchFieldDataType.String,
-        searchable=True
+        searchable=True,
     ),
     SearchField(
-
         name="embedding_vector",
         type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
         searchable=True,
         vector_search_dimensions=1536,
-        vector_search_profile_name="hnsw-profile"
-    )
+        vector_search_profile_name="hnsw-profile",
+    ),
 ]
 
 index = SearchIndex(
 
     name=INDEX_NAME,
-    fields=fileds,
+    fields=fields,
     vector_search=vector_search
 )
+
+# Delete existing index if it exists (to avoid field deletion conflicts)
+# try:
+#     index_client.delete_index(INDEX_NAME)
+#     print(f"Deleted existing index '{INDEX_NAME}'")
+# except Exception as e:
+#     print(f"No existing index to delete or error: {e}")
 
 result = index_client.create_or_update_index(index)
 print(f"index '{result.name}' created/updated")

@@ -24,19 +24,7 @@ indexer = SearchIndexer(
     data_source_name=DATASOURCE_NAME,
     target_index_name=INDEX_NAME,
     skillset_name=SKILLSET_NAME,
-    #field mapping: connects skillset outputs to index fields
-#     field_mappings=[
 
-#         {"sourceFieldName": "/document/metadata_storage_name", "targetFieldName": "chunk_id"},
-#         {"sourceFieldName": "/document/metadata_storage_path", "targetFieldName": "patinet_id"},
-#     ],
-#     output_field_mappings=[
-#         {"sourceFieldName": "/document/chunks/*/content", "targetFieldName": "chunk_text"},
-#         {"sourceFieldName": "/document/chunks/*/embedding_vector", "targetFieldName": "embedding_vector"},
-#     ]
-
-    
-# )
  field_mappings=[],  
     output_field_mappings=[
         # SplitSkill output "chunks" → chunk_text
