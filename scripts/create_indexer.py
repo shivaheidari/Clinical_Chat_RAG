@@ -20,12 +20,12 @@ client = SearchIndexerClient(
 #created indexer- connects DataSource -> SkillSet -> Index
 indexer = SearchIndexer(
 
-    name="mimic-clinical-indexer-dec1",
+    name="mimic-clinical-indexer-dec2",
     data_source_name=DATASOURCE_NAME,
     target_index_name=INDEX_NAME,
     skillset_name=SKILLSET_NAME,
 
- field_mappings=[],  
+ #field_mappings=[],  
 output_field_mappings=[
         # SplitSkill output "chunks" → chunk_text
         {
@@ -42,7 +42,7 @@ output_field_mappings=[
 
 
 result = client.create_or_update_indexer(indexer)
-client.run_indexer("mimic-clinical-indexer-dec1")
+client.run_indexer("mimic-clinical-indexer-dec2")
 
 print("🚀 Indexer created and running!")
 print("⏳ Check progress in Azure Portal → your Search service → Indexers")
