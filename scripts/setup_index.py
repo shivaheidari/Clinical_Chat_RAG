@@ -69,7 +69,7 @@ fields = [
     ),
     SearchField(
         name="embedding_vector",
-        type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
+        type=SearchFieldDataType.Collection(SearchFieldDataType.Double),
         searchable=True,
         vector_search_dimensions=1536,
         vector_search_profile_name="hnsw-profile",
