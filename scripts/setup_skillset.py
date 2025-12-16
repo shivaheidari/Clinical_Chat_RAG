@@ -26,7 +26,7 @@ AZURE_OPENAI_ENDPOINT = keys["AZURE_OPENAI_ENDPOINT"]
 AZURE_OPENAI_KEY = keys["AZURE_OPENAI_KEY"]
 
 CONTAINER_NAME = "notes"
-SKILLSET_NAME = "clinical-chunk-embed-skillset-dec"
+SKILLSET_NAME = "clinical-chunk-embed-skillset-raw"
 DATASOURCE_NAME = "mimic-notes-datasource2025nov"
 
 indexer_client = SearchIndexerClient(
@@ -78,7 +78,22 @@ skillset = SearchIndexerSkillset(
                 InputFieldMappingEntry(name="text", source="/document/chunks/*")
             ],
             outputs=[
-                OutputFieldMappingEntry(name="embedding", target_name="embedding_vector")
+                OutputFieldMappingEntry(name="embedding", target_name="raw_embedding")
+            ]
+        ),
+        # WebApiSkill to convert embeddings to float32. Replace `uri` with your
+        # deployed Azure Function HTTPS endpoint before creating the skillset.
+        WebApiSkill(
+            name="embedding-float32-converter",
+            description="Convert embeddings to float32 for Azure Search",
+            context="/document/chunks/*",
+            uri="https://<your-function-app>.azurewebsites.net/api/convert_embedding",
+            batch_size=1,
+            inputs=[
+                InputFieldMappingEntry(name="values", source="/document/chunks/*/raw_embedding")
+            ],
+            outputs=[
+                OutputFieldMappingEntry(name="values", target_name="embedding_vector_f32")
             ]
         ),
 
