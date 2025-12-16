@@ -10,7 +10,7 @@ SEARCH_ENDPOINT = keys["SEARCH_ENDPOINT"]
 SEARCH_ADMIN_KEY = keys["SEARCH_ADMIN_KEY"]
 INDEX_NAME = "mimic-rag-index"
 DATASOURCE_NAME = "mimic-notes-datasource2025nov"
-SKILLSET_NAME = "clinical-chunk-embed-skillset"
+SKILLSET_NAME = "clinical-chunk-embed-skillset-dec"
 
 client = SearchIndexerClient(
     endpoint=SEARCH_ENDPOINT,
@@ -20,7 +20,7 @@ client = SearchIndexerClient(
 #created indexer- connects DataSource -> SkillSet -> Index
 indexer = SearchIndexer(
 
-    name="mimic-clinical-indexer",
+    name="mimic-clinical-indexer-dec1",
     data_source_name=DATASOURCE_NAME,
     target_index_name=INDEX_NAME,
     skillset_name=SKILLSET_NAME,
@@ -42,7 +42,7 @@ output_field_mappings=[
 
 
 result = client.create_or_update_indexer(indexer)
-client.run_indexer("mimic-clinical-indexer")
+client.run_indexer("mimic-clinical-indexer-dec1")
 
 print("🚀 Indexer created and running!")
 print("⏳ Check progress in Azure Portal → your Search service → Indexers")

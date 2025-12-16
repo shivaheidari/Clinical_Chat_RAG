@@ -25,7 +25,7 @@ AZURE_OPENAI_ENDPOINT = keys["AZURE_OPENAI_ENDPOINT"]
 AZURE_OPENAI_KEY = keys["AZURE_OPENAI_KEY"]
 
 CONTAINER_NAME = "notes"
-SKILLSET_NAME = "clinical-chunk-embed-skillset"
+SKILLSET_NAME = "clinical-chunk-embed-skillset-dec"
 DATASOURCE_NAME = "mimic-notes-datasource2025nov"
 
 indexer_client = SearchIndexerClient(
@@ -44,6 +44,7 @@ data_source = SearchIndexerDataSourceConnection(name=DATASOURCE_NAME,
 
 indexer_client.create_or_update_data_source_connection(data_source)
 print(f"✅ Data source '{DATASOURCE_NAME}' created")
+
 
 skillset = SearchIndexerSkillset(
     name=SKILLSET_NAME,
