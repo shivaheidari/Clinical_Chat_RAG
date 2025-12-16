@@ -20,7 +20,7 @@ with open("confings/azure_keys.json") as f:
 
 SEARCH_ENDPOINT = keys["SEARCH_ENDPOINT"]
 SEARCH_ADMIN_KEY = keys["SEARCH_ADMIN_KEY"]
-INDEX_NAME = "mimic-rag-index"
+INDEX_NAME = "mimic-rag-index-dec"
 
 #creating index client
 index_client = SearchIndexClient(endpoint=SEARCH_ENDPOINT, 
@@ -83,12 +83,6 @@ index = SearchIndex(
     vector_search=vector_search
 )
 
-# Delete existing index if it exists (to avoid field deletion conflicts)
-# try:
-#     index_client.delete_index(INDEX_NAME)
-#     print(f"Deleted existing index '{INDEX_NAME}'")
-# except Exception as e:
-#     print(f"No existing index to delete or error: {e}")
 
 result = index_client.create_or_update_index(index)
 print(f"index '{result.name}' created/updated")

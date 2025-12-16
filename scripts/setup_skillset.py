@@ -7,6 +7,7 @@ from azure.search.documents.indexes.models import(
     SearchIndexerSkillset,
     SplitSkill,
     AzureOpenAIEmbeddingSkill,
+    WebApiSkill,
     InputFieldMappingEntry,
     OutputFieldMappingEntry,
     SplitSkillLanguage,
@@ -79,7 +80,8 @@ skillset = SearchIndexerSkillset(
             outputs=[
                 OutputFieldMappingEntry(name="embedding", target_name="embedding_vector")
             ]
-        )
+        ),
+
     ]
 )
 

@@ -8,7 +8,7 @@ with open("confings/azure_keys.json") as f:
 
 SEARCH_ENDPOINT = keys["SEARCH_ENDPOINT"]
 SEARCH_ADMIN_KEY = keys["SEARCH_ADMIN_KEY"]
-INDEX_NAME = "mimic-rag-index"
+INDEX_NAME = "mimic-rag-index-dec"
 DATASOURCE_NAME = "mimic-notes-datasource2025nov"
 SKILLSET_NAME = "clinical-chunk-embed-skillset-dec"
 
@@ -20,7 +20,7 @@ client = SearchIndexerClient(
 #created indexer- connects DataSource -> SkillSet -> Index
 indexer = SearchIndexer(
 
-    name="mimic-clinical-indexer-dec2",
+    name="mimic-clinical-indexer-dec",
     data_source_name=DATASOURCE_NAME,
     target_index_name=INDEX_NAME,
     skillset_name=SKILLSET_NAME,
@@ -42,7 +42,7 @@ output_field_mappings=[
 
 
 result = client.create_or_update_indexer(indexer)
-client.run_indexer("mimic-clinical-indexer-dec2")
+client.run_indexer("mimic-clinical-indexer-dec")
 
 print("🚀 Indexer created and running!")
 print("⏳ Check progress in Azure Portal → your Search service → Indexers")
