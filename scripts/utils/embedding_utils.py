@@ -1,68 +1,29 @@
-"""
-Simple HTTP endpoint to convert embeddings from float64 to float32.
-Deploy to Azure Functions or run locally for testing.
-"""
-import json
 import numpy as np
-from flask import Flask, request, jsonify
+from typing import List, Any
 
-app = Flask(__name__)
+def convert_to_float32(embeddings: List[float]) -> List[float]:
+    """Convert OpenAI float64 embeddings → float32 for Azure AI Search"""
+    return np.array(embeddings, dtype=np.float32).tolist()
 
-@app.route('/convert_embedding', methods=['POST'])
-def convert_embedding():
-    """
-    Expects JSON body matching Azure Cognitive Search Web API skill format:
-    {
-      "values": [
-         {"recordId": "1", "data": {"embedding": [0.1, 0.2, ...] }},
-         ...
-      ]
-    }
-
-    Returns same shape with converted embeddings under `data.embedding`.
-    """
-    try:
-        payload = request.get_json(force=True)
-        results = []
-        for record in payload.get("values", []):
-            record_id = record.get("recordId")
-            embedding = None
-            # input may be nested under data or directly present depending on skill
-            if isinstance(record.get("data"), dict):
-                embedding = record.get("data").get("embedding")
-            else:
-                embedding = record.get("embedding")
-
-            if embedding is None:
-                results.append({
-                    "recordId": record_id,
-                    "errors": [],
-                    "data": {"embedding": None}
-                })
-                continue
-
-            # convert to float32 and back to list
-            try:
-                emb_f32 = np.array(embedding, dtype=np.float32).tolist()
-            except Exception as e:
-                results.append({
-                    "recordId": record_id,
-                    "errors": [{"message": f"conversion error: {e}"}],
-                    "data": {"embedding": None}
-                })
-                continue
-
+def process_webapi_response(values: List[dict]) -> List[dict]:
+    """Simulate WebApiSkill response format"""
+    results = []
+    for record in values:
+        record_id = record.get("recordId")
+        embedding = record.get("data", {}).get("embedding") or record.get("embedding")
+        
+        if embedding:
+            emb_f32 = convert_to_float32(embedding)
             results.append({
                 "recordId": record_id,
-                "errors": [],
-                "data": {"embedding": emb_f32}
+                "data": {"embedding": emb_f32},
+                "errors": None,
+                "warnings": None
             })
-
-        return jsonify({"values": results}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
-
-if __name__ == '__main__':
-    # For local testing
-    app.run(host='0.0.0.0', port=5000, debug=True)
+        else:
+            results.append({
+                "recordId": record_id,
+                "data": {"embedding": None},
+                "errors": [{"message": "No embedding"}]
+            })
+    return [{"values": results}]
